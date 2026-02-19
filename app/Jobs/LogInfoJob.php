@@ -22,6 +22,6 @@ class LogInfoJob implements ShouldQueue
      */
     public function handle(): void
     {
-        //
+        \Log::info('This is an info log from LogInfoJob.');
     }
 }

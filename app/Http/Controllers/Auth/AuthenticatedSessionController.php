@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Jobs\SendWelcomeEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Queue\Attributes\WithoutRelations;
@@ -32,7 +33,7 @@ class AuthenticatedSessionController extends Controller
 
         $user = Auth::user()->load('posts');
 
-        dispatch(new \App\Jobs\SendWelcomeEmail($user));
+        SendWelcomeEmail::dispatchSync($user);
 
         return redirect()->intended(route('dashboard', absolute: false));
     }

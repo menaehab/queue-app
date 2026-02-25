@@ -9,9 +9,11 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Mail;
 
-class SendWelcomeEmail implements ShouldQueue,ShouldBeEncrypted,ShouldBeUnique
+class SendWelcomeEmail implements ShouldQueue, ShouldBeEncrypted, ShouldBeUnique
 {
     use Queueable;
+    public $uniqueFor = 60; // Ensure the job is unique for 60 seconds
+
 
     /**
      * Create a new job instance.
@@ -28,7 +30,12 @@ class SendWelcomeEmail implements ShouldQueue,ShouldBeEncrypted,ShouldBeUnique
     {
         Mail::raw("you are logged in", function ($message) {
             $message->to($this->user->email)
-            ->subject("Welcome to our application");
+                ->subject("Welcome to our application");
         });
+    }
+
+    public function uniqueId(): string
+    {
+        return $this->user->id;
     }
 }

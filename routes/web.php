@@ -1,11 +1,22 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Jobs\SendWelcomeEmail;
+use App\Models\User;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    dispatch(new \App\Jobs\LogInfoJob())->onQueue('log_info');
+    // dispatch(new \App\Jobs\LogInfoJob())->onQueue('log_info');
 
+    $user = User::first();
+
+    dispatch(new SendWelcomeEmail($user))->onQueue('emails');
+
+    Bus::batch([
+        new \App\Jobs\JobBatch1(),
+        new \App\Jobs\JobBatch2(),
+    ])->dispatch();
     return view('welcome');
 });
 

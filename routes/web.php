@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Jobs\SendWelcomeEmail;
+use App\Jobs\TryAPICall;
 use App\Models\User;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Route;
@@ -11,12 +12,13 @@ Route::get('/', function () {
 
     $user = User::first();
 
-    dispatch(new SendWelcomeEmail($user))->onQueue('emails');
+    // dispatch(new SendWelcomeEmail($user))->onQueue('emails');
+        dispatch(new TryAPICall());
 
-    Bus::batch([
-        new \App\Jobs\JobBatch1(),
-        new \App\Jobs\JobBatch2(),
-    ])->dispatch();
+    // Bus::batch([
+    //     new \App\Jobs\JobBatch1(),
+    //     new \App\Jobs\JobBatch2(),
+    // ])->dispatch();
     return view('welcome');
 });
 
